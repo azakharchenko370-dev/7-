@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Місія: Хмарний детектив — Інформатика 7 клас</title>
+<style>
+:root{--bg:#08152d;--panel:#122746;--panel2:#19365d;--text:#f4f8ff;--muted:#b9c9df;--cyan:#55d6ff;--green:#69e0a3;--gold:#ffd166;--red:#ff7b89}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#173d68 0,#08152d 48%,#050d1d 100%);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:900px;margin:auto;padding:24px 16px 50px}.hero{text-align:center;padding:30px 18px 22px}.orb{font-size:54px;filter:drop-shadow(0 0 18px #55d6ff)}h1{font-size:clamp(30px,6vw,48px);line-height:1.1;margin:12px 0;color:#fff}h1 span{color:var(--cyan)}.sub{color:var(--muted);max-width:650px;margin:10px auto 0}
+.panel{background:linear-gradient(145deg,rgba(25,54,93,.96),rgba(14,34,62,.96));border:1px solid #31577e;border-radius:20px;padding:22px;box-shadow:0 16px 45px #0005;margin:16px 0}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;color:var(--muted);font-size:14px}.pill{background:#0b1d35;border:1px solid #31577e;border-radius:99px;padding:7px 12px}
+.progress{height:10px;background:#071329;border-radius:99px;overflow:hidden;margin:16px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .3s}
+h2{margin:5px 0 10px;font-size:25px}p{color:var(--muted)}.story{font-size:17px;color:#e7f2ff}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:12px 17px;font-weight:700;transition:.15s}
+button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.primary{background:linear-gradient(90deg,#45c7f2,#5ee0b0);color:#06172b}.secondary{background:#25466f;color:white;border:1px solid #47739d}.answer{display:block;width:100%;text-align:left;background:#102b4b;color:#f2f7ff;border:1px solid #42688d;margin:10px 0;padding:14px}.answer.correct{border-color:var(--green);background:#123f3a}.answer.wrong{border-color:var(--red);background:#482b3d}.answer:disabled{cursor:default;opacity:1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.feedback{padding:12px 14px;border-radius:12px;margin-top:14px;background:#0b1c32;border:1px solid #31577e}.feedback.good{border-color:var(--green)}.feedback.bad{border-color:var(--red)}
+.hidden{display:none!important}.stage-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:15px}.stage{padding:12px;border-radius:12px;background:#0c203a;border:1px solid #29496d;color:var(--muted)}.stage.done{border-color:var(--green);color:#dfffee}.stage.current{border-color:var(--cyan);color:white}
+.small{font-size:13px;color:var(--muted)}.certificate{text-align:center;border:2px dashed var(--gold);padding:22px;border-radius:16px}.certificate .rank{font-size:28px;color:var(--gold);font-weight:800}
+footer{text-align:center;color:#91a8c4;font-size:13px;margin-top:24px}
+@media(max-width:540px){.panel{padding:17px}.stats{justify-content:center}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="hero">
+  <div class="orb">☁️🔎</div>
+  <h1>Місія: <span>Хмарний детектив</span></h1>
+  <p class="sub">Інтерактивний квест з інформатики для 7 класу за параграфами 1.5–1.6 підручника Й. Ривкінда та ін.</p>
+</header>
+
+<section id="intro" class="panel">
+  <div class="stats"><span class="pill">🎓 7 клас</span><span class="pill">🧩 6 випробувань</span><span class="pill">⭐ Максимум: 12 балів</span></div>
+  <h2>Термінове повідомлення!</h2>
+  <p class="story">У шкільному хмарному сховищі стався збій. Файли навчального проєкту заблоковано, а команда втратила доступ до спільної роботи. Ти — цифровий детектив. Пройди шість випробувань, збери ключі та віднови роботу сховища!</p>
+  <p>За кожну правильну відповідь отримуєш 2 бали. Уважно читай запитання: деякі завдання перевіряють не лише пам’ять, а й уміння застосовувати знання.</p>
+  <button class="primary" id="startBtn">🚀 Розпочати місію</button>
+</section>
+
+<section id="game" class="panel hidden">
+  <div class="stats"><span class="pill" id="stageCounter">Етап 1 із 6</span><span class="pill" id="score">⭐ 0 балів</span></div>
+  <div class="progress"><div class="bar" id="progress"></div></div>
+  <div class="small" id="topic">ПАРАГРАФ 1.5</div>
+  <h2 id="questionTitle"></h2>
+  <p id="questionText" class="story"></p>
+  <div id="answers"></div>
+  <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+  <div class="actions"><button id="nextBtn" class="primary hidden">Наступне випробування →</button></div>
+  <div class="stage-list" id="stageList"></div>
+</section>
+
+<section id="finish" class="panel hidden">
+  <div class="certificate">
+    <div style="font-size:46px">🏆</div>
+    <h2>Місію завершено!</h2>
+    <p>Ти допоміг команді відновити роботу хмарного сховища.</p>
+    <div class="rank" id="rank"></div>
+    <h2 id="finalScore"></h2>
+    <p id="finalText"></p>
+  </div>
+  <div class="actions" style="justify-content:center"><button class="primary" id="restartBtn">↻ Пройти квест ще раз</button></div>
+</section>
+<footer>Навчальний матеріал: Інформатика, 7 клас, Й. Ривкінд та ін., 2024. Параграфи 1.5 і 1.6.</footer>
+</main>
+<script>
+const tasks = [
+ {topic:"ПАРАГРАФ 1.5 · ХМАРНІ СЕРВІСИ",title:"Випробування 1. Хмарний світ",text:"Що називають хмарними технологіями?",options:["Технології для віддаленого опрацювання та зберігання даних","Програми, які працюють лише без Інтернету","Спосіб очищення комп’ютера від вірусів","Технології створення лише графічних зображень"],correct:0,why:"Хмарні технології надають засоби для віддаленого опрацювання та зберігання даних."},
+ {topic:"ПАРАГРАФ 1.5 · СЕРВІСИ GOOGLE",title:"Випробування 2. Сервісна станція",text:"Який сервіс Google призначений для впорядкованого зберігання файлів і надання доступу до них іншим користувачам?",options:["Google Meet","Google Диск","Google Карти","Google Календар"],correct:1,why:"Google Диск — хмарне сховище для впорядкованого зберігання файлів і спільного використання."},
+ {topic:"ПАРАГРАФ 1.5 · GOOGLE ДИСК",title:"Випробування 3. Сховище даних",text:"Ти випадково перемістив файл у Кошик Google Диска. Що правильно сказати про нього?",options:["Файл одразу зникає назавжди","Файл автоматично надсилається всім контактам","Файл тимчасово зберігається в Кошику; його можна відновити","Файл перетворюється на папку"],correct:2,why:"Видалені об’єкти тимчасово зберігаються в Кошику. За матеріалом підручника, автоматичне остаточне видалення відбувається через 30 днів."},
+ {topic:"ПАРАГРАФ 1.6 · ОНЛАЙН-ДОКУМЕНТИ",title:"Випробування 4. Майстерня документів",text:"Який набір сервісів правильно відповідає призначенню офісних онлайн-додатків Google?",options:["Документи — текст; Таблиці — електронні таблиці; Презентації — слайди","Документи — карти; Таблиці — пошта; Презентації — відеозв’язок","Документи — переклад; Таблиці — фото; Презентації — контакти","Усі три сервіси призначені тільки для зберігання файлів"],correct:0,why:"Google Документи — текстовий процесор, Google Таблиці — редактор електронних таблиць, Google Презентації — редактор презентацій."},
+ {topic:"ПАРАГРАФ 1.6 · СПІЛЬНИЙ ДОСТУП",title:"Випробування 5. Секретний доступ",text:"Учитель має переглянути документ, але не повинен змінювати його вміст. Який рівень доступу потрібно надати?",options:["Може редагувати","Може коментувати","Може переглядати","Власник документа"],correct:2,why:"Рівень «Може переглядати» дає змогу переглядати вміст без внесення змін."},
+ {topic:"ПАРАГРАФИ 1.5–1.6 · ФІНАЛ",title:"Випробування 6. Командна операція",text:"Команда з трьох учнів працює над спільною презентацією. Усі мають додавати й змінювати слайди. Яку дію потрібно виконати власнику файлу?",options:["Надати кожному доступ «Може переглядати»","Надати учасникам доступ «Може редагувати»","Надіслати лише назву файлу без доступу","Завантажити файл у Кошик"],correct:1,why:"Для спільного редагування учасникам потрібно надати рівень доступу «Може редагувати»."}
+];
+let index=0,points=0,answered=false,completed=[];
+const $=id=>document.getElementById(id);
+function show(id){$(id).classList.remove("hidden")}
+function hide(id){$(id).classList.add("hidden")}
+function renderStages(){
+ $("stageList").innerHTML=tasks.map((t,i)=>`<div class="stage ${completed.includes(i)?"done":i===index?"current":""}">${completed.includes(i)?"✓":i<index?"•":"🔒"} Етап ${i+1}: ${t.title.replace(/^Випробування \d+\. /,"")}</div>`).join("");
+}
+function loadTask(){
+ const t=tasks[index];answered=false;
+ $("stageCounter").textContent=`Етап ${index+1} із ${tasks.length}`;
+ $("score").textContent=`⭐ ${points} балів`;
+ $("progress").style.width=`${index/tasks.length*100}%`;
+ $("topic").textContent=t.topic;$("questionTitle").textContent=t.title;$("questionText").textContent=t.text;
+ $("answers").innerHTML="";
+ t.options.forEach((option,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+". "+option;b.addEventListener("click",()=>choose(i));$("answers").appendChild(b)});
+ hide("feedback");hide("nextBtn");renderStages();
+}
+function choose(choice){
+ if(answered)return;answered=true;
+ const t=tasks[index],buttons=[...$("answers").querySelectorAll("button")],correct=choice===t.correct;
+ buttons.forEach((b,i)=>{b.disabled=true;if(i===t.correct)b.classList.add("correct");else if(i===choice)b.classList.add("wrong")});
+ if(correct){points+=2;completed.push(index)}
+ $("score").textContent=`⭐ ${points} балів`;
+ $("feedback").className="feedback "+(correct?"good":"bad");
+ $("feedback").innerHTML=(correct?"<strong>✅ Правильно! +2 бали.</strong> ":"<strong>❌ Не зовсім так.</strong> ")+t.why;
+ $("nextBtn").textContent=index===tasks.length-1?"Показати результат 🏆":"Наступне випробування →";
+ show("feedback");show("nextBtn");renderStages();
+}
+function finish(){
+ hide("game");show("finish");$("progress").style.width="100%";
+ $("finalScore").textContent=`Твій результат: ${points} із 12 балів`;
+ let rank,desc;
+ if(points>=10){rank="🏅 Майстер хмарних технологій";desc="Чудова робота! Ти впевнено орієнтуєшся в хмарних сервісах і спільній роботі."}
+ else if(points>=6){rank="🔎 Досвідчений детектив";desc="Гарний результат! Повтори окремі поняття й спробуй покращити результат."}
+ else{rank="🌱 Початківець цифрового світу";desc="Не зупиняйся! Перечитай параграфи 1.5–1.6 і пройди квест ще раз."}
+ $("rank").textContent=rank;$("finalText").textContent=desc;
+}
+$("startBtn").addEventListener("click",()=>{hide("intro");show("game");loadTask()});
+$("nextBtn").addEventListener("click",()=>{if(index<tasks.length-1){index++;loadTask()}else finish()});
+$("restartBtn").addEventListener("click",()=>{index=0;points=0;completed=[];hide("finish");show("game");loadTask()});
+</script>
+</body>
+</html>
